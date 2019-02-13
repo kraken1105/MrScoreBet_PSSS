@@ -1,11 +1,7 @@
 package persistencyDAO;
 
 import java.sql.*;
-import java.util.ArrayList;
-
-import modelMVC.Pronostico;
-import modelMVC.Schedina;
-import modelMVC.Utente;
+import modelMVC.*;
 import utils.exceptions.UserNotFoundException;
 import utils.exceptions.UsernameAlreadyRegisteredException;
 
