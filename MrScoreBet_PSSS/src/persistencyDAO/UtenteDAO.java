@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import model.*;
 
-public class UserDAO {
+public class UtenteDAO {
 	
 	// 1) Create
 	public static void create(User u) throws SQLException {
@@ -126,9 +126,9 @@ public class UserDAO {
 			s.close();
 			
 			for(String userID:userIDs) {
-				User u = UserDAO.read(userID);
+				User u = UtenteDAO.read(userID);
 				u.setToPlayBet(b);
-				UserDAO.update(u);
+				UtenteDAO.update(u);
 			}
 			
 		} catch (SQLException|NullPointerException|UserNotFoundException e) {

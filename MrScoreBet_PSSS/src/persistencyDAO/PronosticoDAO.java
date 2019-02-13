@@ -145,12 +145,12 @@ public class PronosticoDAO {
 				
 				User u = null;
 				if (rs.next()) {
-					u = UserDAO.read(rs.getString("FB_user_ID"));
+					u = UtenteDAO.read(rs.getString("FB_user_ID"));
 					u.setPuntiTot(u.getPuntiTot()+pron.getPunti());
 				}				
 				s.close();	
 				
-				UserDAO.update(u);				
+				UtenteDAO.update(u);				
 			}
 			
 			

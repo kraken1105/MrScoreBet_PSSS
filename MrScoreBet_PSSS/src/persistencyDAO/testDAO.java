@@ -15,8 +15,8 @@ public class testDAO {
 
 	public static void main(String[] args) throws SQLException, UserNotFoundException {
 		
-		User u = UserDAO.read("114147579601537");
-		UserDAO.delete(u);
+		User u = UtenteDAO.read("114147579601537");
+		UtenteDAO.delete(u);
 				
 		
 		/*LocalDateTime orarioScadenza = LocalDateTime.of(2018, 12, 23, 12, 30);
