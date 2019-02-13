@@ -1,22 +1,18 @@
 package persistencyDAO;
 
+
+
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
-import com.sun.org.apache.xml.internal.resolver.readers.OASISXMLCatalogReader;
-
-import model.Bet;
-import model.Game;
-import model.User;
+import modelMVC.Utente;
 
 public class testDAO {
 
 	public static void main(String[] args) throws SQLException, UserNotFoundException {
 		
-		User u = UtenteDAO.read("114147579601537");
-		UtenteDAO.delete(u);
+		Utente u = UtenteDAO.read("vinc");
+		System.out.println(u.getEmail());
+		//UtenteDAO.delete(u);
 				
 		
 		/*LocalDateTime orarioScadenza = LocalDateTime.of(2018, 12, 23, 12, 30);

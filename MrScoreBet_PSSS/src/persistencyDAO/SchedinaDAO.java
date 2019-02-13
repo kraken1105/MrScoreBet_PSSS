@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import modelMVC.Esito;
 import modelMVC.Schedina;
 
-public class SchedinaDAO {
+public class SchedinaDAO{
 	
 	// 1) Create
 	public static void create(Schedina schedina) throws SQLException {
@@ -105,6 +105,4 @@ public class SchedinaDAO {
 			if (s != null) s.close();
 		}
 	}
-		
-
 }
