@@ -8,9 +8,9 @@ public class Schedina {
 		private int giornata;
 		private LocalDateTime dataScadenza;
 		private ArrayList<String> gameList;
-		private int esito;
+		private Esito esito;
 		
-		public Schedina(int giornata, LocalDateTime dataScadenza, ArrayList<String> gameList, int esito) {
+		public Schedina(int giornata, LocalDateTime dataScadenza, ArrayList<String> gameList, Esito esito) {
 			super();
 			this.giornata = giornata;
 			this.dataScadenza = dataScadenza;
@@ -42,11 +42,11 @@ public class Schedina {
 			this.gameList = gameList;
 		}
 
-		public int getEsito() {
+		public Esito getEsito() {
 			return esito;
 		}
 
-		public void setEsito(int esito) {
+		public void setEsito(Esito esito) {
 			this.esito = esito;
 		}	
 				

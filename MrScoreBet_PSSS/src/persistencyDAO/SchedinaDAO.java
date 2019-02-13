@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import modelMVC.Esito;
 import modelMVC.Schedina;
 
 public class SchedinaDAO {
@@ -54,8 +55,8 @@ public class SchedinaDAO {
 							
 				for(int i=1; i<11; i++)
 					gameList.add(new String(rs.getString("match"+i)));
-								
-				schedina= new Schedina(numGiornata, dataScadenza, gameList,0);
+				Esito esito = EsitoDAO.read(rs.getInt("esito"));			
+				schedina= new Schedina(numGiornata, dataScadenza, gameList,esito);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -77,7 +78,7 @@ public class SchedinaDAO {
 		try {
 			String comando = new String("UPDATE SCHEDINE SET esito=? WHERE giornata=?");
 			s = conn.prepareStatement(comando);
-			s.setInt(1, schedina.getEsito());
+			s.setInt(1, schedina.getEsito().getId());
 			s.setInt(2, schedina.getGiornata());
 			
 			s.executeUpdate();
