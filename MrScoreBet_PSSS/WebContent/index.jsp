@@ -25,10 +25,9 @@
 	  	function Modulo1() {
 	  		if (!validazione_psw(document.getElementById("username1").value)) {alert("L'username deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("username1").focus(); return false;}
 	  		else if (!validazione_psw(document.getElementById("psw1").value)) {alert("La password deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("psw1").focus(); return false;}
-	  		else if (document.getElementById("oraScadenza").value=="") {alert("Inserisci l'orario di scadenza!"); return false;}
 			//INVIA IL MODULO
 			else {
-				document.getElementById("formBet1").action = "<%=request.getContextPath()%>/RegisterServlet";
+				document.getElementById("formBet1").action = "<%=request.getContextPath()%>/LogServlet";
 				document.getElementById("formBet1").submit();		
 			}
 		}
@@ -92,7 +91,7 @@
 					<div class="panel__card__copy__text">
 						<p>Login:</p>
 						<form id="formBet1" method="post">				
-							<input type="text" id="username1" name="username1" placeholder="username1"><br>
+							<input type="text" id="username1" name="username1" placeholder="username"><br>
 							<input type="password" id="psw1" name="psw1" placeholder="password">
 							<br><br>
 							<input type="button" value="Login" onClick="Modulo1()">
