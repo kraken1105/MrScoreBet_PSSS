@@ -3,25 +3,27 @@ package persistencyDAO;
 import java.sql.*;
 import java.util.ArrayList;
 
-import model.*;
+import modelMVC.Pronostico;
+import modelMVC.Schedina;
+import modelMVC.Utente;
 
 public class UtenteDAO {
 	
 	// 1) Create
-	public static void create(User u) throws SQLException {
+	public static void create(Utente u) throws SQLException {
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 		
 		try {
 			s = conn.prepareStatement("INSERT INTO UTENTI VALUES (?,?,?,?,?,?)");
-			s.setString(1, u.getUserID());
-			
-			s.setString(2, u.getNome_cognome());
-			s.setString(3, u.getRuolo());
+			s.setString(1, u.getUsername());
+			s.setString(2, u.getEmail());
+			s.setString(3, u.getPassword());
 			s.setInt(4, 0);
-			s.setNull(5, java.sql.Types.INTEGER);	// lastPlayedBet è null			
+			s.setString(5, u.getRuolo());
 			if (u.getToPlayBet()==null) s.setNull(6, java.sql.Types.INTEGER);	// non esiste alcuna toPlayBet nel db
-			else s.setInt(6, u.getToPlayBet().getID());
+			else s.setInt(6, u.getToPlayBet().getGiornata());
+			s.setNull(7, java.sql.Types.INTEGER);	// lastPlayedBet è null	
 			
 			s.executeUpdate();
 		} catch (SQLException e) {
@@ -34,24 +36,26 @@ public class UtenteDAO {
 	// 2) Read
 	//    Nota: se viene lanciata una UserNotFoundException significa che l'utente non è presente nel db,
 	//			pertanto va fatta una Create dall'esterno.
-	public static User read(String userID) throws SQLException, UserNotFoundException {
-		User utente = null;
+	public static Utente read(String username) throws SQLException, UserNotFoundException {
+		Utente utente = null;
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 		
 		try { 
-			s = conn.prepareStatement("SELECT * FROM UTENTI WHERE FB_USER_ID=?");
-			s.setString(1, userID);
+			s = conn.prepareStatement("SELECT * FROM UTENTI WHERE username=?");
+			s.setString(1, username);
 			ResultSet rs = s.executeQuery();
 			
 			if (rs.next()) {
-				String nome_cognome = rs.getString("nome_cognome");
+				String email = rs.getString("email");
+				String password = rs.getString("password");
+				int crediti = rs.getInt("crediti");
 				String ruolo = rs.getString("ruolo");
-				int puntiTot = rs.getInt("puntiTot");	
-				Bet lastPlayedBet = PronosticoDAO.read(rs.getInt("lastPlayedBet"));
-				Bet toPlayBet = SchedinaDAO.read(rs.getInt("toPlayBet"));
+					
+				Pronostico lastPlayedBet = PronosticoDAO.read(rs.getInt("lastPlayedBet"));
+				Schedina toPlayBet = SchedinaDAO.read(rs.getInt("toPlayBet"));
 				
-				utente = new User(userID, nome_cognome, ruolo, puntiTot, lastPlayedBet, toPlayBet, null);
+				utente = new Utente(username, email, password, ruolo, crediti, lastPlayedBet, toPlayBet);
 			} else {
 				throw new UserNotFoundException();
 			}
@@ -62,27 +66,27 @@ public class UtenteDAO {
 		} finally {
 			if (s != null) s.close();
 		}
-		
+	
 		return utente;		
 	}
 	
 	// 3) Update
-	public static void update(User u) throws SQLException {
+	public static void update(Utente u) throws SQLException {
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 			
 		try {
-			s = conn.prepareStatement("UPDATE UTENTI SET ruolo=?, puntiTot=?, lastPlayedBet = ?, toPlayBet=? WHERE FB_User_ID=?");
-			s.setString(1, u.getRuolo());
-			s.setInt(2, u.getPuntiTot());
+			s = conn.prepareStatement("UPDATE UTENTI SET crediti=?, lastPlayedBet = ?, toPlayBet=? WHERE username=?");
+			
+			s.setInt(1, u.getCrediti());
 			
 			if(u.getLastPlayedBet() == null) s.setNull(3, java.sql.Types.INTEGER);
-			else s.setInt(3, u.getLastPlayedBet().getID());
+			else s.setInt(3, u.getLastPlayedBet().getSchedina().getGiornata());
 			
 			if(u.getToPlayBet() == null) s.setNull(4, java.sql.Types.INTEGER);
-			else s.setInt(4, u.getToPlayBet().getID());
+			else s.setInt(4, u.getToPlayBet().getGiornata());
 			
-			s.setString(5, u.getUserID());
+			s.setString(5, u.getUsername());
 			
 			s.executeUpdate();
 		} catch (SQLException e) {
@@ -93,16 +97,16 @@ public class UtenteDAO {
 	}
 	
 	// 4) Delete
-	public static void delete(User u) throws SQLException{
-		Bet b = u.getLastPlayedBet();
-		if(b!=null) PronosticoDAO.delete(b);		
+	public static void delete(Utente u) throws SQLException{
+		Pronostico p = u.getLastPlayedBet();
+		if(p!=null) PronosticoDAO.delete(p);		
 		
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 		
 		try { 
-			s = conn.prepareStatement("DELETE FROM UTENTI WHERE FB_User_ID=?");
-			s.setString(1, u.getUserID());
+			s = conn.prepareStatement("DELETE FROM UTENTI WHERE username=?");
+			s.setString(1, u.getUsername());
 			
 			s.executeUpdate();
 		} catch (SQLException e) {
@@ -110,32 +114,6 @@ public class UtenteDAO {
 		} finally {
 			if (s != null) s.close();
 		}
-	}
-	
-	// Aggiorna il toPlayBet a tutti gli utenti
-	public static void setToPlayBet(Bet b) throws SQLException {
-		Connection conn = DBManager.getInstance().getConnection();
-		PreparedStatement s = null;
-		
-		try { 
-			s = conn.prepareStatement("SELECT * FROM UTENTI");
-			ResultSet rs = s.executeQuery();
-			
-			ArrayList<String> userIDs = new ArrayList<String>();
-			while (rs.next()) userIDs.add(rs.getString("FB_user_ID"));
-			s.close();
-			
-			for(String userID:userIDs) {
-				User u = UtenteDAO.read(userID);
-				u.setToPlayBet(b);
-				UtenteDAO.update(u);
-			}
-			
-		} catch (SQLException|NullPointerException|UserNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			if (s != null) s.close();
-		}		
 	}
 
 }

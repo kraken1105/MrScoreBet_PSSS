@@ -3,29 +3,27 @@ package persistencyDAO;
 import java.sql.*;
 import java.util.ArrayList;
 
-import model.*;
+import modelMVC.Pronostico;
+import modelMVC.Schedina;
 
 public class PronosticoDAO {
 	
 	// 1) Create
 	//	  Nota: restituisce l'ID generato dal DB, il chiamante lo deve assegnare alla schedina.
 	//			Questo metodo viene invocato unicamente quando un utente gioca una nuova schedina.			
-	public static int create(Bet p, Bet schedina) throws SQLException {
+	public static int create(Pronostico pronostico) throws SQLException {
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 		int generated_ID = -1;
 		
 		try {
-			s = conn.prepareStatement("INSERT INTO PRONOSTICI (schedina_ID,punti_calcolati,punti_pronostici," + 
-					"pron_match1,pron_match2,pron_match3,pron_match4,pron_match5,pron_match6,pron_match7," + 
-					"pron_match8,pron_match9,pron_match10) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-			s.setInt(1, schedina.getID());
-			s.setBoolean(2, false);
-			s.setNull(3, java.sql.Types.INTEGER);
+			s = conn.prepareStatement("INSERT INTO PRONOSTICI ("+
+					"match1,match2,match3,match4,match5,match6,match7," + 
+					"match8,match9,match10,schedina) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			
-			for(int i=0; i<10; i++)
-				s.setString(i+4, p.getGameList().get(i).getPronostico());
-		
+			for(int i=1; i<11; i++)
+				s.setString(i, pronostico.getResultsList().get(i));
+			s.setInt(11, pronostico.getSchedina().getGiornata());
 			s.executeUpdate();
 			
 			ResultSet rs = s.getGeneratedKeys();
@@ -43,25 +41,24 @@ public class PronosticoDAO {
 	}
 	
 	// 2) Read
-	public static Bet read(int ID) throws SQLException {
-		Bet bet = null;
+	public static Pronostico read(int ID) throws SQLException {
+		Schedina schedina = null;
+		Pronostico pronostico= null;
+		ArrayList<String> array = new ArrayList<String>();
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 		
 		try { 
-			s = conn.prepareStatement("SELECT * FROM PRONOSTICI WHERE ID=?");
+			s = conn.prepareStatement("SELECT * FROM PRONOSTICI WHERE id=?");
 			s.setInt(1, ID);
 			ResultSet rs = s.executeQuery();
 				
 			while (rs.next()) {
-				bet = SchedinaDAO.read(rs.getInt("schedina_ID"));
-				bet.setID(ID);
-				if (rs.getBoolean("punti_calcolati")) bet.setPunti(rs.getInt("punti_pronostici"));
-				
-				for(int i=1; i<11; i++)
-					bet.getGameList().get(i-1).setPronostico(rs.getString("pron_match"+i));
-				
+				for(int i=1; i<11; i++) array.set(i,rs.getString("match"+i));
+				schedina = SchedinaDAO.read(rs.getInt("schedina"));
 			}
+			
+			pronostico = new Pronostico(ID,array,schedina);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} catch (NullPointerException ex) {
@@ -70,37 +67,34 @@ public class PronosticoDAO {
 			if (s != null) s.close();
 		}
 		
-		return bet;		
+		return pronostico;		
 	}
 	
 	// 3) Update
-	//	  Richiamato solo quando un admin inserisce gli esiti.
-	public static void update(Bet b) throws SQLException {
+	public static void update(Pronostico b) throws SQLException {
+		/*da implementare in base alle esigenze
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 			
 		try {
-			s = conn.prepareStatement("UPDATE PRONOSTICI SET punti_calcolati=1, punti_pronostici=? WHERE ID=?");			
-			s.setInt(1, b.getPunti());
-			s.setInt(2, b.getID());
-			s.executeUpdate();
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
 			if (s != null) s.close();
 		}
+		*/
 	}
 	
 	
 	// 4) Delete
-		public static void delete(Bet b) throws SQLException{
+		public static void delete(Pronostico pronostico) throws SQLException{
 			Connection conn = DBManager.getInstance().getConnection();
 			PreparedStatement s = null;
 			
 			try {
-				s = conn.prepareStatement("DELETE FROM PRONOSTICI WHERE ID=?");
-				s.setInt(1, b.getID());
+				s = conn.prepareStatement("DELETE FROM PRONOSTICI WHERE id=?");
+				s.setInt(1, pronostico.getId());
 				
 				s.executeUpdate();
 			} catch (SQLException e) {
@@ -110,56 +104,5 @@ public class PronosticoDAO {
 			}
 		}
 		
-	
-	// Calcola i punteggi di tutti i pronostici riferiti a una data schedina (e li somma a quelli dell'utente)
-	public static void calcolaPunti(Bet b) throws SQLException {
-		Connection conn = DBManager.getInstance().getConnection();
-		PreparedStatement s = null, s2 = null;
-			
-		try {
-			s = conn.prepareStatement("SELECT * FROM PRONOSTICI WHERE SCHEDINA_ID=?");
-			s.setInt(1, b.getID());			
-			ResultSet rs = s.executeQuery();
-			
-			ArrayList<Bet> pronList = new ArrayList<Bet>();
-			while (rs.next()) {
-				pronList.add(PronosticoDAO.read(rs.getInt("ID")));
-			}			
-			s.close();
-			
-			for(Bet pron:pronList) {
-				int pron_corretti = 0;				
-				
-				for(int i=0; i<10; i++)
-					if (pron.getGameList().get(i).getPronostico().equals(b.getGameList().get(i).getRisultato()))
-						pron_corretti++;
-				
-				// Assegna 10 punti per ogni risultato correttamente pronosticato, ed ulteriori 100 se sono tutti corretti
-				pron.setPunti(pron_corretti*10 + ((pron_corretti==10)?100:0) );
-				PronosticoDAO.update(pron);
-				
-				// Aggiorna il punteggio totale dell'utente
-				s = conn.prepareStatement("SELECT * FROM UTENTI WHERE lastPlayedBet=?");
-				s.setInt(1, pron.getID());				
-				rs = s.executeQuery();
-				
-				User u = null;
-				if (rs.next()) {
-					u = UtenteDAO.read(rs.getString("FB_user_ID"));
-					u.setPuntiTot(u.getPuntiTot()+pron.getPunti());
-				}				
-				s.close();	
-				
-				UtenteDAO.update(u);				
-			}
-			
-			
-		} catch (SQLException|UserNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			if (s != null) s.close();
-			if (s2 != null) s2.close();
-		}
-	}
 
 }
