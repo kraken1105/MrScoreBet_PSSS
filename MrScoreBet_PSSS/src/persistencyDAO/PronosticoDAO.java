@@ -54,7 +54,7 @@ public class PronosticoDAO {
 			ResultSet rs = s.executeQuery();
 				
 			while (rs.next()) {
-				for(int i=1; i<11; i++) array.set(i,rs.getString("match"+i));
+				for(int i=1; i<11; i++) array.set(i-1,rs.getString("match"+i));
 				schedina = SchedinaDAO.read(rs.getInt("schedina"));
 			}
 			
