@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 
 <%
-	String errore = (String) session.getAttribute("errore");
-	if(errore!=null && !errore.equals("null")) {
-		out.print("<script> alert(\""+errore+"\"); </script> ");
-		session.setAttribute("errore","null");	// reset dell'errore
+	String info = (String) session.getAttribute("info");
+	if(info!=null && !info.equals("null")) {
+		out.print("<script> alert(\""+info+"\"); </script> ");
+		session.setAttribute("info","null");	// reset dell'info
 	}
 	
 	boolean logged_in = false;
@@ -19,7 +19,41 @@
 	<link rel="stylesheet" href="style.css">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  
+	<script>
+	  	function Modulo1() {
+	  		if (!validazione_email(document.getElementById("email1").value)) {alert("Indirizzo email non valido!"); document.getElementById("email1").focus(); return false;}
+	  		else if (!validazione_psw(document.getElementById("psw1").value)) {alert("La password deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("psw1").focus(); return false;}
+	  		else if (document.getElementById("oraScadenza").value=="") {alert("Inserisci l'orario di scadenza!"); return false;}
+			//INVIA IL MODULO
+			else {
+				document.getElementById("formBet1").action = "<%=request.getContextPath()%>/RegisterServlet";
+				document.getElementById("formBet1").submit();		
+			}
+		}
+	  	
+	  	function Modulo2() {
+	  		if (!validazione_email(document.getElementById("email2").value)) {alert("Indirizzo email non valido!"); document.getElementById("email2").focus(); return false;}
+	  		else if (!validazione_psw(document.getElementById("username").value)) {alert("L'username deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("username").focus(); return false;}
+	  		else if (!validazione_psw(document.getElementById("psw2").value)) {alert("La password deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("psw2").focus(); return false;}
+			//INVIA IL MODULO
+			else {
+				document.getElementById("formBet2").action = "<%=request.getContextPath()%>/RegisterServlet";
+				document.getElementById("formBet2").submit();		
+			}
+		}
+	  	
+	  	function validazione_email(email) {
+	  	  var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+	  	  if (!reg.test(email)) return false; else return true;
+	  	}
+	  	
+	  	function validazione_psw(psw) {
+		  var reg = /^.{6,20}$/;
+		  if (!reg.test(psw)) return false; else return true;
+		}
+	</script>
 
 </head>
 <body>
@@ -57,9 +91,9 @@
 				<div class="panel__card__copy2">
 					<div class="panel__card__copy__text">
 						<p>Login:</p>
-						<form id="formBet" method="post">				
-							<input type="text" id="email" name="email" placeholder="email"><br>
-							<input type="password" id="psw" name="psw" placeholder="password">
+						<form id="formBet1" method="post">				
+							<input type="text" id="email1" name="email1" placeholder="email"><br>
+							<input type="password" id="psw1" name="psw1" placeholder="password">
 							<br><br>
 							<input type="button" value="Login" onClick="Modulo1()">
 						</form>
@@ -69,13 +103,13 @@
 				<div class="panel__card__copy3">
 					<div class="panel__card__copy__text">
 						<p>Registrati:</p>
-						<form id="formBet" method="post">
-							<input type="text" id="email" name="email" placeholder="email"><br>
+						<form id="formBet2" method="post">
+							<input type="text" id="email2" name="email2" placeholder="email"><br>
 							<input type="text" id="username" name="username" placeholder="username"><br>
-							<input type="password" id="psw" name="psw" placeholder="password">
+							<input type="password" id="psw2" name="psw2" placeholder="password">
 							<br><br>
 							<input type="button" value="Registrati" onClick="Modulo2()">
-				 				<input type="reset" value="Reset">
+				 			<input type="reset" value="Reset">
 						</form>
 					</div>
 				</div>

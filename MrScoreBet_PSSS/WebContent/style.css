@@ -24,7 +24,7 @@ header
 .header__left{float:left; margin:0; padding:0;}
 .header__left__item{display: inline-block;}
 .header__left__item a{color:#fff; display: block; padding:20px; text-decoration: none; height:100%;
-	background-image: url("/MrScoreBet/images/logo.png");
+	background-image: url("/MrScoreBet_PSSS/images/logo.png");
 	background-size: contain;
 	-o-background-size: cover;
 	-moz-background-size: cover;
@@ -44,7 +44,7 @@ header
 Cover
 -----------------------------*/
 .cover{height:70%;
-	background-image: url("/MrScoreBet/images/background2.jpg");
+	background-image: url("/MrScoreBet_PSSS/images/background2.jpg");
 	background-size: cover;
 	-o-background-size: cover;
 	-moz-background-size: cover;
@@ -139,7 +139,7 @@ Tablet
 	/* banner */
 	.banner__image,
 	.banner__copy{width:50%;height:100%}
-	.panel__copy2{margin-top: 0px; margin-bottom: 0px;}
+	.panel__copy2{margin-top: 0px; margin-bottom: 100px;}
 
 }
 
@@ -166,6 +166,7 @@ Smartphone
 	.panel__card__image,
 	.panel__card__copy{width:100%;height:30%}
 	.panel__card__copy2{width:100%;height:30%}
+	.panel__card__copy3{width:100%; float:left; height:30%;}
 	.panel__copy2{margin-top: 0px; margin-bottom: 0px;}
 
 	/* Banner */
