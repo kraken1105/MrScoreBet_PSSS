@@ -5,13 +5,17 @@ package persistencyDAO;
 import java.sql.SQLException;
 
 import modelMVC.Utente;
+import utils.exceptions.UserNotFoundException;
+import utils.exceptions.UsernameAlreadyRegisteredException;
 
 public class testDAO {
 
-	public static void main(String[] args) throws SQLException, UserNotFoundException {
+	public static void main(String[] args) throws SQLException, UserNotFoundException, UsernameAlreadyRegisteredException {
 		
-		Utente u = UtenteDAO.read("vinc");
-		System.out.println(u.getEmail());
+		Utente pier=new Utente("marco","lui1@lui.it","casa","utente",0,null,null);
+		UtenteDAO.create(pier);
+		
+		
 		//UtenteDAO.delete(u);
 				
 		

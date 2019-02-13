@@ -6,16 +6,18 @@ import java.util.ArrayList;
 import modelMVC.Pronostico;
 import modelMVC.Schedina;
 import modelMVC.Utente;
+import utils.exceptions.UserNotFoundException;
+import utils.exceptions.UsernameAlreadyRegisteredException;
 
 public class UtenteDAO {
 	
 	// 1) Create
-	public static void create(Utente u) throws SQLException {
+	public static void create(Utente u) throws SQLException, UsernameAlreadyRegisteredException{
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 		
 		try {
-			s = conn.prepareStatement("INSERT INTO UTENTI VALUES (?,?,?,?,?,?)");
+			s = conn.prepareStatement("INSERT INTO UTENTI VALUES (?,?,?,?,?,?,?)");
 			s.setString(1, u.getUsername());
 			s.setString(2, u.getEmail());
 			s.setString(3, u.getPassword());
@@ -27,7 +29,8 @@ public class UtenteDAO {
 			
 			s.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			if(e.getErrorCode()==19) throw new UsernameAlreadyRegisteredException("Username "+u.getUsername()+" già utilizzato!");
+			else throw e;
 		} finally {
 			if (s != null) s.close();
 		}
@@ -57,7 +60,7 @@ public class UtenteDAO {
 				
 				utente = new Utente(username, email, password, ruolo, crediti, lastPlayedBet, toPlayBet);
 			} else {
-				throw new UserNotFoundException();
+				throw new UserNotFoundException("Utente "+username+" non presente nel sistema!");
 			}
 			
 			
