@@ -1,14 +1,12 @@
 package controllerMVC;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import modelMVC.Utente;
-import persistencyDAO.UtenteDAO;
+import modelMVC.*;
 import utils.Utils;
 import utils.exceptions.UsernameAlreadyRegisteredException;
 
@@ -37,21 +35,24 @@ public class RegisterServlet extends HttpServlet {
 			response.sendRedirect(request.getContextPath()+"/index.jsp");
 		} else {
 			
+			// Controlli superati con successo, viene contattato il coordinatore del Model
+			ICoordinatorFacade coord = new CoordinatorFacade();			
 			try {
 				String sha256hex_psw = org.apache.commons.codec.digest.DigestUtils.sha256Hex(psw);
+				boolean esito = coord.effettuaRegistrazione(email, username, sha256hex_psw);
 				
-				Utente utente = new Utente(username,email,sha256hex_psw,"utente",0,null,null);
-				UtenteDAO.create(utente);
+				if (esito) {
+					session.setAttribute("info", "Registrazione completata! Effettua il login");
+					response.sendRedirect(request.getContextPath()+"/index.jsp");
+				} else {
+					session.setAttribute("info", "Si è verificato un errore. Riprova più tardi.");
+					response.sendRedirect(request.getContextPath()+"/index.jsp");
+				}
 				
-				session.setAttribute("info", "Registrazione completata! Effettua il login");
+			} catch(UsernameAlreadyRegisteredException e) {
+				session.setAttribute("info", e.getMessage());
 				response.sendRedirect(request.getContextPath()+"/index.jsp");
-				
-			}			
-			catch(UsernameAlreadyRegisteredException e) {
-				session.setAttribute("info", "Username già presente nel sistema! Scegli un username differente");
-				response.sendRedirect(request.getContextPath()+"/index.jsp");	
-			} 
-			catch(SQLException e) {e.printStackTrace();}
+			}
 			
 		}
 		
