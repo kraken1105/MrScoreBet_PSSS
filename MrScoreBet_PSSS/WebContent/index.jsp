@@ -23,7 +23,7 @@
   
 	<script>
 	  	function Modulo1() {
-	  		if (!validazione_email(document.getElementById("email1").value)) {alert("Indirizzo email non valido!"); document.getElementById("email1").focus(); return false;}
+	  		if (!validazione_psw(document.getElementById("username1").value)) {alert("L'username deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("username1").focus(); return false;}
 	  		else if (!validazione_psw(document.getElementById("psw1").value)) {alert("La password deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("psw1").focus(); return false;}
 	  		else if (document.getElementById("oraScadenza").value=="") {alert("Inserisci l'orario di scadenza!"); return false;}
 			//INVIA IL MODULO
@@ -35,7 +35,7 @@
 	  	
 	  	function Modulo2() {
 	  		if (!validazione_email(document.getElementById("email2").value)) {alert("Indirizzo email non valido!"); document.getElementById("email2").focus(); return false;}
-	  		else if (!validazione_psw(document.getElementById("username").value)) {alert("L'username deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("username").focus(); return false;}
+	  		else if (!validazione_psw(document.getElementById("username2").value)) {alert("L'username deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("username2").focus(); return false;}
 	  		else if (!validazione_psw(document.getElementById("psw2").value)) {alert("La password deve contenere almeno 6 caratteri e massimo 20!"); document.getElementById("psw2").focus(); return false;}
 			//INVIA IL MODULO
 			else {
@@ -92,7 +92,7 @@
 					<div class="panel__card__copy__text">
 						<p>Login:</p>
 						<form id="formBet1" method="post">				
-							<input type="text" id="email1" name="email1" placeholder="email"><br>
+							<input type="text" id="username1" name="username1" placeholder="username1"><br>
 							<input type="password" id="psw1" name="psw1" placeholder="password">
 							<br><br>
 							<input type="button" value="Login" onClick="Modulo1()">
@@ -105,7 +105,7 @@
 						<p>Registrati:</p>
 						<form id="formBet2" method="post">
 							<input type="text" id="email2" name="email2" placeholder="email"><br>
-							<input type="text" id="username" name="username" placeholder="username"><br>
+							<input type="text" id="username2" name="username2" placeholder="username"><br>
 							<input type="password" id="psw2" name="psw2" placeholder="password">
 							<br><br>
 							<input type="button" value="Registrati" onClick="Modulo2()">

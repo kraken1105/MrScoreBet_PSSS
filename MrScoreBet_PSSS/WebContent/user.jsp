@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 
 <%@page import="dao.*"%>
-<%@page import="model.*"%>
+<%@page import="modelMVC.*"%>
 <%@page import="java.time.LocalDateTime"%>
 <%
-	User utente = (User) session.getAttribute("utente");	
-	Image img = utente.getImage();
-	utente = UserDAO.read(utente.getUserID()); // aggiorna i dati dell'utente in sessione
-	utente.setImage(img);
-	session.setAttribute("utente", utente);
+	Utente utente = (Utente) session.getAttribute("utente");
 	
-	Bet lastPlayedBet = utente.getLastPlayedBet();
+	Schedina lastPlayedBet = utente.getLastPlayedBet();
 	String lastPlayedGiornata = new String("-");
 	Bet toPlayBet = utente.getToPlayBet();
 	String toPlayGiornata = new String("-");
@@ -28,10 +24,11 @@
 		data = null;
 	}
 	
-	String errore = (String) session.getAttribute("errore");
-	if(!errore.equals("null")) {
-		out.print("<script> alert(\""+errore+"\"); </script> ");
-		session.setAttribute("errore","null");	// reset dell'errore
+	// Per msg info
+	String info = (String) session.getAttribute("info");
+	if(info!=null && !info.equals("null")) {
+		out.print("<script> alert(\""+info+"\"); </script> ");
+		session.setAttribute("info","null");	// reset dell'info
 	}
 	
 	// Per admin
