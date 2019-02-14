@@ -17,11 +17,12 @@ public class PronosticoDAO {
 		try {
 			s = conn.prepareStatement("INSERT INTO PRONOSTICI ("+
 					"match1,match2,match3,match4,match5,match6,match7," + 
-					"match8,match9,match10,schedina) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+					"match8,match9,match10,schedina,punti) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			
 			for(int i=1; i<11; i++)
 				s.setString(i, pronostico.getResultsList().get(i));
 			s.setInt(11, pronostico.getSchedina().getGiornata());
+			s.setNull(12, java.sql.Types.INTEGER);
 			s.executeUpdate();
 			
 			ResultSet rs = s.getGeneratedKeys();
@@ -54,7 +55,8 @@ public class PronosticoDAO {
 			while (rs.next()) {
 				for(int i=1; i<11; i++) array.set(i-1,rs.getString("match"+i));
 				schedina = SchedinaDAO.read(rs.getInt("schedina"));
-				pronostico = new Pronostico(ID,array,schedina);
+				int punti = rs.getInt("punti");
+				pronostico = new Pronostico(ID,array,schedina,punti);
 			}
 			
 		} catch (SQLException e) {
