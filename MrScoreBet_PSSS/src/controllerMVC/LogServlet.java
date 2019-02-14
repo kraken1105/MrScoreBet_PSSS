@@ -18,7 +18,7 @@ public class LogServlet extends HttpServlet {
 	
     //** Effettua il Logout dell'utente in sessione, se presente **//
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	HttpSession session = request.getSession();
+    	HttpSession session =  request.getSession();
     	
     	session.removeAttribute("utente");
     	session.setAttribute("info", "Logout effettuato!");
