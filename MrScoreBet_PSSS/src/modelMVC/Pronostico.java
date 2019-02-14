@@ -9,11 +9,12 @@ public class Pronostico implements IPronostico {
 	private Schedina schedina;
 	private int punti;
 	
-	public Pronostico(int id, ArrayList<String> resultsList, Schedina schedina) {
+	public Pronostico(int id, ArrayList<String> resultsList, Schedina schedina, int punti) {
 		super();
 		this.id = id;
 		this.resultsList = resultsList;
 		this.schedina = schedina;
+		this.punti = punti;
 	}
 	
 	@Override
