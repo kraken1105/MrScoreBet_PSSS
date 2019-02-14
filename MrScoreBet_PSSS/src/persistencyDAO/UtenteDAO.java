@@ -54,7 +54,7 @@ public class UtenteDAO {
 				Pronostico lastPlayedBet = PronosticoDAO.read(rs.getInt("lastPlayedBet"));
 				Schedina toPlayBet = SchedinaDAO.read(rs.getInt("toPlayBet"));
 				
-				utente = new Utente(username, email, password, ruolo, crediti, lastPlayedBet, toPlayBet);
+				utente = new Utente(username, email, password, crediti, ruolo, lastPlayedBet, toPlayBet);
 			} else {
 				throw new UserNotFoundException("Utente "+username+" non presente nel sistema!");
 			}

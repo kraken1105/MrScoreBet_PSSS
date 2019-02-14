@@ -12,7 +12,7 @@ public class testDAO {
 
 	public static void main(String[] args) throws SQLException, UserNotFoundException, UsernameAlreadyRegisteredException {
 		
-		Utente pier=new Utente("marco","lui1@lui.it","casa","utente",0,null,null);
+		Utente pier=new Utente("marco","lui1@lui.it","casa",0,"utente",null,null);
 		UtenteDAO.create(pier);
 		
 		

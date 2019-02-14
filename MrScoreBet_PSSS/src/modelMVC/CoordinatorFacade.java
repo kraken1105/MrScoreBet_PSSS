@@ -11,7 +11,7 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 	@Override
 	public boolean effettuaRegistrazione(String email, String username, String password)
 	throws UsernameAlreadyRegisteredException {		
-		Utente utente = new Utente(username,email,password,"utente",0,null,null);
+		Utente utente = new Utente(username,email,password,0,"utente",null,null);
 		
 		DBManager.getInstance().LockDB();							// lock DB
 		try {

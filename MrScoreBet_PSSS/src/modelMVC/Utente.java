@@ -10,7 +10,7 @@ public class Utente {
 		private Pronostico lastPlayedBet;
 		private Schedina toPlayBet;
 		
-		public Utente(String username, String email, String password, String ruolo, int crediti, Pronostico lastPlayedBet, Schedina toPlayBet) {
+		public Utente(String username, String email, String password,  int crediti, String ruolo, Pronostico lastPlayedBet, Schedina toPlayBet) {
 			super();
 			this.username = username;
 			this.email = email;
