@@ -106,8 +106,11 @@ User
 .panel__copy{max-width: 800px; margin: 0px auto; margin-top: -60px; background: #fff; padding:20px 40px;position: relative; z-index: 1}
 .panel__copy a{text-decoration: none}
 
-.panel__copy2{max-width: 800px; margin: 0px auto; margin-top: -60px; background: #fff; padding:20px 40px;position: relative; z-index: 1}
+.panel__copy2{max-width: 800px; margin: 0px auto; margin-top: -25%; background: #fff; padding:20px 40px;position: relative; z-index: 1}
 .panel__copy2 a{text-decoration: none}
+
+.panel__copy3{max-width: 800px; margin: 0px auto; margin-top: -60px; background: #fff; padding:20px 40px;position: relative; z-index: 1}
+.panel__copy3 a{text-decoration: none}
 
 .panel__copy__meta{font-weight: bold; font-size: 16px;}
 .panel__copy__title{font-size: 32px;}
@@ -119,9 +122,6 @@ User
 .panel__card__copy3{width:50%; float:right; height:100%; display: table;}
 .panel__card__copy__text{display: table-cell; vertical-align: middle;padding:30px;}
 .panel__card__copy__text p{margin-top:0; margin-bottom:1}
-
-.panel__copy2{max-width: 800px; margin: 0px auto; margin-top: -25%; background: #fff; padding:20px 40px;position: relative; z-index: 1}
-.panel__copy2 a{text-decoration: none}
 
 
 
