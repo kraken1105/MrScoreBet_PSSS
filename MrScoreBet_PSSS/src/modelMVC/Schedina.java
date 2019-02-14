@@ -3,7 +3,7 @@ package modelMVC;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Schedina {
+public class Schedina extends AbstractSchedina {
 	
 		private int giornata;
 		private LocalDateTime dataScadenza;
