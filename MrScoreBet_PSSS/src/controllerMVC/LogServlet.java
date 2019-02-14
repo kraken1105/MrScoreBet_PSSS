@@ -20,10 +20,8 @@ public class LogServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	HttpSession session = request.getSession();
     	
-    	if(request.getParameter("utente")!=null) {
-    		session.removeAttribute("utente");
-    		session.setAttribute("info", "Logout effettuato!");
-    	}
+    	session.removeAttribute("utente");
+    	session.setAttribute("info", "Logout effettuato!");
     	
     	response.sendRedirect(request.getContextPath());
 	}

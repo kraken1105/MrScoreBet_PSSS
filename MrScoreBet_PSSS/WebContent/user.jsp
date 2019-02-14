@@ -10,8 +10,6 @@
 	Pronostico lastPlayed = utente.getLastPlayedBet();	
 	Schedina toPlayBet = utente.getToPlayBet();
 	
-	System.out.println("Ruolo "+utente.getRuolo());
-	
 	String lastPlayedGiornata = new String("-");
 	if (lastPlayed != null) lastPlayedGiornata = String.valueOf(lastPlayed.getSchedina().getGiornata());
 	
@@ -72,14 +70,8 @@
 		<div class="panel__copy">
 			<h2 align="center">Dati personali</h2>
 
-			<div class="panel__card">
-				<div class="panel__card__copy">
-					<div class="panel__card__copy__text">
-						<p>Username: <br></br><b><%=""+utente.getUsername() %></b></p>
-						<p>E-mail: <br></br><b><%=""+utente.getEmail() %></b></p>
-					</div>
-				</div>
-			</div>
+			<p>Username: <br></br><b><%=""+utente.getUsername() %></b></p>
+			<p>E-mail: <br></br><b><%=""+utente.getEmail() %></b></p>
 
 			<h2 align="center">Schedine</h2>
 			<p>Punti totali: <b><%=""+utente.getCrediti() %> pts</b></p>
@@ -90,7 +82,7 @@
 		</div>
 
 		<!-- Questo pannello compare solo se è loggato un admin -->
-		<div class="panel__copy2" <% if(!utente.getRuolo().equals("admin")) out.print("style=\"display: none\"");%> > 
+		<div class="panel__copy3" <% if(!utente.getRuolo().equals("admin")) out.print("style=\"display: none\"");%> > 
 			<h2 align="center">Area admin</h2>
 
 			<p>Inserisci i <a href="<%=request.getContextPath()%>/admin/InsertEsitoServlet">risultati (esiti)</a> di una giornata</p>
