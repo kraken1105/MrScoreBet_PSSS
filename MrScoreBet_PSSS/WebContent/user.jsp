@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 
-<%@page import="dao.*"%>
 <%@page import="modelMVC.*"%>
 <%@page import="java.time.LocalDateTime"%>
 <%
+	// Utente in sessione
 	Utente utente = (Utente) session.getAttribute("utente");
 	
-	Schedina lastPlayedBet = utente.getLastPlayedBet();
+	// Dati relativi all'utente
+	Pronostico lastPlayed = utente.getLastPlayedBet();	
+	Schedina toPlayBet = utente.getToPlayBet();
+	
+	System.out.println("Ruolo "+utente.getRuolo());
+	
 	String lastPlayedGiornata = new String("-");
-	Bet toPlayBet = utente.getToPlayBet();
-	String toPlayGiornata = new String("-");
+	if (lastPlayed != null) lastPlayedGiornata = String.valueOf(lastPlayed.getSchedina().getGiornata());
 	
 	LocalDateTime data = null;
-	
-	if (lastPlayedBet != null) {
-		lastPlayedGiornata = String.valueOf(lastPlayedBet.getNumGiornata());		
-	}
-	
+	String toPlayGiornata = new String("-");
 	if (toPlayBet != null) {
-		data = toPlayBet.getOrarioScadenza();
-		toPlayGiornata = String.valueOf(toPlayBet.getNumGiornata());		
-	} else {
-		data = null;
+		data = toPlayBet.getDataScadenza();
+		toPlayGiornata = String.valueOf(toPlayBet.getGiornata());		
 	}
 	
 	// Per msg info
@@ -29,13 +27,7 @@
 	if(info!=null && !info.equals("null")) {
 		out.print("<script> alert(\""+info+"\"); </script> ");
 		session.setAttribute("info","null");	// reset dell'info
-	}
-	
-	// Per admin
-	String toInsertScoreGiornata = new String("-");	
-	Bet toInsertScoreBet = SchedinaDAO.getToPlayBet();	
-	if (toInsertScoreBet != null)
-		toInsertScoreGiornata = String.valueOf(toInsertScoreBet.getNumGiornata());	
+	}	
 %>
 
 <html lang="en">
@@ -61,8 +53,8 @@
 			<span></span>
 		</a>
 		<ul class="header__menu animate">
-			<li class="header__menu__item"><a href="<%=request.getContextPath()%>/app/user.jsp">Area Personale</a></li>
-			<li class="header__menu__item"><a href="<%=request.getContextPath()%>/Logout">Logout</a></li>
+			<li class="header__menu__item"><a href="<%=request.getContextPath()%>/user.jsp">Area Personale</a></li>
+			<li class="header__menu__item"><a href="<%=request.getContextPath()%>/LogServlet">Logout</a></li>
 		</ul>
 	</header>
 
@@ -81,35 +73,28 @@
 			<h2 align="center">Dati personali</h2>
 
 			<div class="panel__card">
-				<img class="panel__card__image" src="<%=utente.getImage().getUrl() %>" 
-												width="<%=utente.getImage().getWidth()%>"
-												height ="<%=utente.getImage().getHeight()%>">
 				<div class="panel__card__copy">
 					<div class="panel__card__copy__text">
-						<p>Nome e Cognome: <br></br><b><%=""+utente.getNome_cognome() %></b></p>
-						<p>Facebook UserID: <br></br><b><%=""+utente.getUserID() %></b></p>
+						<p>Username: <br></br><b><%=""+utente.getUsername() %></b></p>
+						<p>E-mail: <br></br><b><%=""+utente.getEmail() %></b></p>
 					</div>
 				</div>
 			</div>
 
 			<h2 align="center">Schedine</h2>
-			<p>Punti totali: <b><%=""+utente.getPuntiTot() %> pts</b></p>
-			<!-- TO-DO: sistemare query string per indirizzamneto alla servlet -->
+			<p>Punti totali: <b><%=""+utente.getCrediti() %> pts</b></p>
+<!-- TO-DO: sistemare query string per indirizzamneto alla servlet -->
 			<p>Ultima schedina giocata: <a href="<%=request.getContextPath()%>/app/bets?to=myLastBet"><%=lastPlayedGiornata%> giornata </a></p>
 			<p>Nuova schedina da giocare: <a href="<%=request.getContextPath()%>/app/bets?to=placeMyBet"><%=toPlayGiornata%> giornata </a><b id="mytimer"></b></p>
-			
-			<br><br>
-			<p><b>ATTENZIONE:</b> premendo sul seguente bottone cancellerai tutti i tuoi dati dall'applicazione e rimuoverai l'accesso tramite il tuo account Facebook.</p>
-			<p align="center"><a href="<%=request.getContextPath()%>/Logout?delete=true" class="button2">Chiudi il tuo account</a></p>
 		
 		</div>
 
-		<!-- TO-DO: far comparire il pannello solo se Ã¨ loggato un admin -->
+		<!-- Questo pannello compare solo se è loggato un admin -->
 		<div class="panel__copy2" <% if(!utente.getRuolo().equals("admin")) out.print("style=\"display: none\"");%> > 
 			<h2 align="center">Area admin</h2>
 
-			<p>Inserisci i risultati della <a href="<%=request.getContextPath()%>/admin/manage?to=insertScore"><%=toInsertScoreGiornata%> giornata</a></p>
-			<p>Inserisci una <a href="<%=request.getContextPath()%>/admin/manage?to=insertBet">nuova schedina</a></p>
+			<p>Inserisci i <a href="<%=request.getContextPath()%>/admin/InsertEsitoServlet">risultati (esiti)</a> di una giornata</p>
+			<p>Inserisci una <a href="<%=request.getContextPath()%>/admin/InsertBetServlet">nuova schedina</a></p>
 		</div>
 
 	</article>
@@ -134,18 +119,19 @@
 	 });
 </script>
 
+
+<!-- Codice JavaScript per l'aggiornamento del timer -->
 <script>
 	function countDown(second,endMinute,endHour,endDay,endMonth,endYear) {
 		var now = new Date();
 		second = (arguments.length == 1) ? second + now.getSeconds() : second;
 		endYear =  typeof(endYear) != 'undefined' ?  endYear : now.getFullYear();            
-		endMonth = endMonth ? endMonth - 1 : now.getMonth();  //numero del mese cominciando da 0 esempio 03- marzo 
+		endMonth = endMonth ? endMonth - 1 : now.getMonth();
 		endDay = typeof(endDay) != 'undefined' ? endDay :  now.getDate();    
 		endHour = typeof(endHour) != 'undefined' ?  endHour : now.getHours();
-		endMinute = typeof(endMinute) != 'undefined' ? endMinute : now.getMinutes();  
-		//agiungiamo un secondo alla data finale (il nostro taimer mostrera tempo gia dopo 1 secondo.)
+		endMinute = typeof(endMinute) != 'undefined' ? endMinute : now.getMinutes();
 		var endDate = new Date(endYear,endMonth,endDay,endHour,endMinute,second+1);
-		var interval = setInterval(function() { //faciamo partire taimer con intervallo di 1 secondo  
+		var interval = setInterval(function() {
 		    var time = endDate.getTime() - now.getTime();
 		    if (time < 0) {                      //se la data finale impostata è meno di 1 secondo
 		    	document.getElementById('mytimer').innerHTML = '(giornata iniziata)';           
@@ -155,7 +141,7 @@
 		        var minutes = Math.floor(time / 6e4) % 60;
 		        var seconds = Math.floor(time / 1e3) % 60; 
 		        var digit='<div style="width:70px;float:left;text-align:center">'+
-		        '<div style="font-family:Stencil;font-size:55px;">';// potete cambiare alteza e famiglia di font
+		        '<div style="font-family:Stencil;font-size:55px;">';// grandezza e famiglia font
 		        var text='</div><div>'
 		        var end='</div></div><div style="float:left;font-size:45px;">:</div>'
 		        
@@ -165,7 +151,7 @@
 		        	document.getElementById('mytimer').innerHTML = '(' + days +'g '+ hours + 'h ' + minutes + 'm ' + seconds +'s rimanenti)';
 		        }         
 		    }
-		    now.setSeconds(now.getSeconds() + 1); //aumentiamo il tempo corrente per 1 secondo
+		    now.setSeconds(now.getSeconds() + 1);
 		}, 1000);
 	}
 	

@@ -68,7 +68,7 @@
 			<span></span>
 		</a>
 		<ul class="header__menu animate">
-			<li class="header__menu__item"><a href="<%=request.getContextPath()%>/app/user.jsp">Area Personale</a></li>
+			<li class="header__menu__item"><a href="<%=request.getContextPath()%>/user.jsp">Area Personale</a></li>
 			<li class="header__menu__item" <% if(!logged_in) out.print("style=\"display: none\"");%>><a href="<%=request.getContextPath()%>/Logout">Logout</a></li>
 		</ul>
 	</header>

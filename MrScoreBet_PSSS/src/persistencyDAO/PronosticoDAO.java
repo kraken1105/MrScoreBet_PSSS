@@ -8,9 +8,7 @@ import modelMVC.Schedina;
 
 public class PronosticoDAO {
 	
-	// 1) Create
-	//	  Nota: restituisce l'ID generato dal DB, il chiamante lo deve assegnare alla schedina.
-	//			Questo metodo viene invocato unicamente quando un utente gioca una nuova schedina.			
+	// 1) Create			
 	public static int create(Pronostico pronostico) throws SQLException {
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
@@ -56,9 +54,9 @@ public class PronosticoDAO {
 			while (rs.next()) {
 				for(int i=1; i<11; i++) array.set(i-1,rs.getString("match"+i));
 				schedina = SchedinaDAO.read(rs.getInt("schedina"));
+				pronostico = new Pronostico(ID,array,schedina);
 			}
 			
-			pronostico = new Pronostico(ID,array,schedina);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} catch (NullPointerException ex) {

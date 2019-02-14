@@ -7,9 +7,7 @@ import modelMVC.Esito;
 
 public class EsitoDAO {
 		
-		// 1) Create
-		//	  Nota: restituisce l'ID generato dal DB, il chiamante lo deve assegnare alla schedina.
-		//			Questo metodo viene invocato unicamente quando un utente gioca una nuova schedina.			
+		// 1) Create			
 		public static int create(Esito esito) throws SQLException {
 			Connection conn = DBManager.getInstance().getConnection();
 			PreparedStatement s = null;
