@@ -10,4 +10,5 @@ public interface ICoordinatorFacade {
 	Utente login(String username, String password) throws UserNotFoundException;
 	boolean inserisciSchedina(ArrayList<String> matchlist, int giornata, LocalDateTime dataScadenza) throws EsitoNotInsertedException;
 	boolean inserisciEsito(int giornata, ArrayList<String> risultsList) throws EsitoAlreadyInsertedException;
+	boolean inserisciPronostico(Utente u, ArrayList<String> pronList) throws SchedinaNotAvailableException;
 }

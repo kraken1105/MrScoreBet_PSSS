@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import persistencyDAO.*;
 import utils.exceptions.EsitoAlreadyInsertedException;
 import utils.exceptions.EsitoNotInsertedException;
+import utils.exceptions.SchedinaNotAvailableException;
 import utils.exceptions.UserNotFoundException;
 import utils.exceptions.UsernameAlreadyRegisteredException;
 
@@ -44,8 +45,8 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 		try {
 			s = Utility.getSchedinaSenzaEsito();
 			if(s!=null) 
-			throw new EsitoNotInsertedException("L'esito della giornata "+s.getGiornata()+" non è stato ancora inserito");
-		else {
+				throw new EsitoNotInsertedException("L'esito della giornata "+s.getGiornata()+" non è stato ancora inserito");
+			else {
 				s = new Schedina(giornata, dataScadenza, matchlist, null);
 				SchedinaDAO.create(s);
 				ArrayList<Utente> utenti = Utility.getAllUsers();
@@ -63,7 +64,7 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 
 	@Override
 	public boolean inserisciEsito(int giornata, ArrayList<String> resultsList) throws EsitoAlreadyInsertedException {
-		DBManager.getInstance().LockDB();					// unlock DB
+		DBManager.getInstance().LockDB();							// lock DB
 		try {
 			Schedina s = Utility.getSchedinaSenzaEsito();
 			if(s==null) 
@@ -75,10 +76,31 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 				s.setEsito(e);
 				SchedinaDAO.update(s);
 				s.updatePronostici();
-				}
+			}
 		}
 		catch (SQLException e) {e.printStackTrace(); return false;}
 		finally {DBManager.getInstance().UnlockDB();}				// unlock DB
+		return true;
+	}
+
+	@Override
+	public boolean inserisciPronostico(Utente u, ArrayList<String> pronList) throws SchedinaNotAvailableException {
+		Schedina s = u.getToPlayBet();
+		if(s==null) throw new SchedinaNotAvailableException("Non è stata trovata alcuna schedina da giocare!");
+		else {
+			Pronostico p = new Pronostico(0, pronList, s, null);
+			DBManager.getInstance().LockDB();							// lock DB
+			try {
+				int id = PronosticoDAO.create(p);
+				p.setId(id);
+				u.setLastPlayedBet(p);
+				u.setToPlayBet(null);
+				UtenteDAO.update(u);				
+			}
+			catch (SQLException e) {e.printStackTrace(); return false;}
+			finally {DBManager.getInstance().UnlockDB();}				// unlock DB			
+		}
+		
 		return true;
 	}
 	

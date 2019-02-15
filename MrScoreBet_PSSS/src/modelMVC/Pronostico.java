@@ -12,9 +12,9 @@ public class Pronostico implements IPronostico {
 	private int id;
 	private ArrayList<String> resultsList;
 	private Schedina schedina;
-	private int punti;
+	private Integer punti;
 	
-	public Pronostico(int id, ArrayList<String> resultsList, Schedina schedina, int punti) {
+	public Pronostico(int id, ArrayList<String> resultsList, Schedina schedina, Integer punti) {
 		super();
 		this.id = id;
 		this.resultsList = resultsList;
@@ -31,8 +31,7 @@ public class Pronostico implements IPronostico {
 				pron_corretti++;
 		
 		// Assegna 10 punti per ogni risultato correttamente pronosticato, ed ulteriori 100 se sono tutti corretti
-		setPunti(pron_corretti*10 + ((pron_corretti==10)?100:0) );
-		
+		setPunti(pron_corretti*10 + ((pron_corretti==10)?100:0) );		
 		
 		// aggiorna l'utente
 		Utente u = Utility.getUtenteDaPronostico(this);
@@ -64,11 +63,11 @@ public class Pronostico implements IPronostico {
 		this.schedina = schedina;
 	}
 	
-	public int getPunti() {
+	public Integer getPunti() {
 		return punti;
 	}
 
-	public void setPunti(int punti) {
+	public void setPunti(Integer punti) {
 		this.punti = punti;
 	}
 	
