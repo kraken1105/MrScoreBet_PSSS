@@ -51,9 +51,8 @@ public class EsitoDAO {
 					
 				while (rs.next()) {
 					for(int i=1; i<11; i++) array.add(rs.getString("match"+i));
+					esito = new Esito(id,array);
 				}
-				
-				esito = new Esito(id,array);
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			} catch (NullPointerException ex) {

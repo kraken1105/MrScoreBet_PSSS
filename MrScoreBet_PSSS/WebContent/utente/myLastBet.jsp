@@ -8,13 +8,20 @@
 
 	// Ultimo pronostico
 	Pronostico lastPlayed = utente.getLastPlayedBet();
+	
 	if (lastPlayed == null) {
 		ArrayList<String> gameList = new ArrayList<String>();
 		for(int i=1; i<11; i++) gameList.add(new String(""));
-		lastPlayed = new Pronostico(0,gameList,new Schedina(0,null,gameList,null),null);
+		lastPlayed = new Pronostico(0,gameList,new Schedina(0,null,gameList,new Esito(0,gameList)),null);
 		
 		session.setAttribute("info", "Non è stato trovato alcun pronostico!");
 		response.sendRedirect(request.getContextPath()+"/user.jsp");
+	} else {
+		if(lastPlayed.getSchedina().getEsito()==null) {
+			ArrayList<String> gameList = new ArrayList<String>();
+			for(int i=1; i<11; i++) gameList.add(new String(""));
+			lastPlayed.getSchedina().setEsito(new Esito(0,gameList));
+		}			
 	}
 %>
 

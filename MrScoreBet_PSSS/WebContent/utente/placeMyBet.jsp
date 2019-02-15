@@ -53,7 +53,7 @@
 			alert("Inserisci un pronostico per <%=toInsertEsito.getGameList().get(9)%>!"); return false; }
 		//INVIA IL MODULO
 		else {
-			document.getElementById("form1").action = "<%=request.getContextPath()%>/app/bets";
+			document.getElementById("form1").action = "<%=request.getContextPath()%>/utente/InsertPronosticoServlet";
 			document.getElementById("form1").submit();
 		}
 	}

@@ -5,7 +5,8 @@
 <%
 	// Utente in sessione
 	Utente utente = (Utente) session.getAttribute("utente");
-	
+System.out.println("lastPlayedBet "+utente.getLastPlayedBet());
+
 	// Dati relativi all'utente
 	Pronostico lastPlayed = utente.getLastPlayedBet();	
 	Schedina toPlayBet = utente.getToPlayBet();
@@ -77,8 +78,8 @@
 			<div <% if(!utente.getRuolo().equals("utente")) out.print("style=\"display: none\"");%>>
 				<h2 align="center">Schedine</h2>
 				<p>Punti totali: <b><%=""+utente.getCrediti() %> pts</b></p>
-				<p>Ultima schedina giocata: <a href="<%=request.getContextPath()%>/utente/myLastBet"><%=lastPlayedGiornata%> giornata </a></p>
-				<p>Nuova schedina da giocare: <a href="<%=request.getContextPath()%>/utente/placeMyBet"><%=toPlayGiornata%> giornata </a><b id="mytimer"></b></p>
+				<p>Ultima schedina giocata: <a href="<%=request.getContextPath()%>/utente/myLastBet.jsp"><%=lastPlayedGiornata%> giornata </a></p>
+				<p>Nuova schedina da giocare: <a href="<%=request.getContextPath()%>/utente/placeMyBet.jsp"><%=toPlayGiornata%> giornata </a><b id="mytimer"></b></p>
 			</div>
 		
 		</div>
