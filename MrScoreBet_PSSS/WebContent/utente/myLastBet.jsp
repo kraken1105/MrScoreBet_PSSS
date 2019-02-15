@@ -117,12 +117,6 @@
 			    </div>
 			    <div class="mrw-tr">
 			        <div class="mrw-td mrw-width-50 mrw-center"><%=lastPlayed.getSchedina().getGameList().get(7)%></div>
-			        <div class="mrw-td mrw-width-25 mrw-center"><%=lastPlayed.getResultsList().get(0)%></div>
-			        <div class="mrw-td mrw-width-25 mrw-center"><% if(lastPlayed.getSchedina().getEsito() == null) out.print(" "); 
-			        												else out.print(lastPlayed.getSchedina().getEsito().getResultsList().get(0)); %></div>
-			    </div>
-			    <div class="mrw-tr">
-			        <div class="mrw-td mrw-width-50 mrw-center"><%=lastPlayed.getSchedina().getGameList().get(7)%></div>
 			        <div class="mrw-td mrw-width-25 mrw-center"><%=lastPlayed.getResultsList().get(7)%></div>
 			        <div class="mrw-td mrw-width-25 mrw-center"><% if(lastPlayed.getSchedina().getEsito() == null) out.print(" "); 
 			        												else out.print(lastPlayed.getSchedina().getEsito().getResultsList().get(7)); %></div>
@@ -132,6 +126,12 @@
 			        <div class="mrw-td mrw-width-25 mrw-center"><%=lastPlayed.getResultsList().get(8)%></div>
 			        <div class="mrw-td mrw-width-25 mrw-center"><% if(lastPlayed.getSchedina().getEsito() == null) out.print(" "); 
 			        												else out.print(lastPlayed.getSchedina().getEsito().getResultsList().get(8)); %></div>
+			    </div>
+			    <div class="mrw-tr">
+			        <div class="mrw-td mrw-width-50 mrw-center"><%=lastPlayed.getSchedina().getGameList().get(9)%></div>
+			        <div class="mrw-td mrw-width-25 mrw-center"><%=lastPlayed.getResultsList().get(9)%></div>
+			        <div class="mrw-td mrw-width-25 mrw-center"><% if(lastPlayed.getSchedina().getEsito() == null) out.print(" "); 
+			        												else out.print(lastPlayed.getSchedina().getEsito().getResultsList().get(9)); %></div>
 			    </div>
 			</div>			
 

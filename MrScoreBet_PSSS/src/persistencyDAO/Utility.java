@@ -94,7 +94,7 @@ public class Utility {
 			while (rs.next()) {
 				int id = rs.getInt("id");
 				int punti= rs.getInt("punti");
-				for(int i=1; i<11; i++) array.set(i-1,rs.getString("match"+i));
+				for(int i=1; i<11; i++) array.add(rs.getString("match"+i));
 				Pronostico pronostico = new Pronostico(id,array,schedina,punti);
 				pronostici.add(pronostico);
 			}

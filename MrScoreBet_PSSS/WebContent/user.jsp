@@ -5,7 +5,6 @@
 <%
 	// Utente in sessione
 	Utente utente = (Utente) session.getAttribute("utente");
-System.out.println("lastPlayedBet "+utente.getLastPlayedBet());
 
 	// Dati relativi all'utente
 	Pronostico lastPlayed = utente.getLastPlayedBet();	
