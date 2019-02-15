@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import modelMVC.*;
 import utils.exceptions.EsitoAlreadyInsertedException;
 
-@WebServlet("/admin/insertBetServlet")
+@WebServlet("/admin/InsertEsitoServlet")
 public class InsertEsitoServlet extends HttpServlet {
 	private static final long serialVersionUID = 4153925506563936612L;
 

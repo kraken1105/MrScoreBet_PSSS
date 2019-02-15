@@ -79,13 +79,13 @@ public class UtenteDAO {
 			
 			s.setInt(1, u.getCrediti());
 			
-			if(u.getLastPlayedBet() == null) s.setNull(3, java.sql.Types.INTEGER);
-			else s.setInt(3, u.getLastPlayedBet().getSchedina().getGiornata());
+			if(u.getLastPlayedBet() == null) s.setNull(2, java.sql.Types.INTEGER);
+			else s.setInt(2, u.getLastPlayedBet().getSchedina().getGiornata());
 			
-			if(u.getToPlayBet() == null) s.setNull(4, java.sql.Types.INTEGER);
-			else s.setInt(4, u.getToPlayBet().getGiornata());
+			if(u.getToPlayBet() == null) s.setNull(3, java.sql.Types.INTEGER);
+			else s.setInt(3, u.getToPlayBet().getGiornata());
 			
-			s.setString(5, u.getUsername());
+			s.setString(4, u.getUsername());
 			
 			s.executeUpdate();
 		} catch (SQLException e) {

@@ -50,6 +50,7 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 				SchedinaDAO.create(s);
 				ArrayList<Utente> utenti = Utility.getAllUsers();
 				for(Utente u:utenti) {
+					System.out.println(u.getUsername());
 					u.setToPlayBet(s);
 					UtenteDAO.update(u);
 				}

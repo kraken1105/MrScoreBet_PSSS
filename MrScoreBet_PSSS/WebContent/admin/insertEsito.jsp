@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 
+<%@page import="java.util.ArrayList"%>
 <%@page import="persistencyDAO.Utility"%>
 <%@page import="modelMVC.*"%>
 <%
 	// Giornata di cui inserire l'esito
 	Schedina toInsertEsito = Utility.getSchedinaSenzaEsito();
 	if (toInsertEsito == null) {
+		ArrayList<String> gameList = new ArrayList<String>();
+		for(int i=1; i<11; i++) gameList.add(new String(""));
+		toInsertEsito = new Schedina(0,null,gameList,null);
+		
 		session.setAttribute("info", "Non è stata trovata alcuna schedina per cui inserire l'esito!");
 		response.sendRedirect(request.getContextPath()+"/user.jsp");
 	}
@@ -46,7 +51,7 @@
 			alert("Inserisci un pronostico per <%=toInsertEsito.getGameList().get(9)%>!"); return false; }
 		//INVIA IL MODULO
 		else {
-			document.getElementById("form1").action = "<%=request.getContextPath()%>/admin/manage";
+			document.getElementById("form1").action = "<%=request.getContextPath()%>/admin/InsertEsitoServlet";
 			document.getElementById("form1").submit();
 		}
 	}
