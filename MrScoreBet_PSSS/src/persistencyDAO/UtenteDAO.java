@@ -80,7 +80,7 @@ public class UtenteDAO {
 			s.setInt(1, u.getCrediti());
 			
 			if(u.getLastPlayedBet() == null) s.setNull(2, java.sql.Types.INTEGER);
-			else s.setInt(2, u.getLastPlayedBet().getSchedina().getGiornata());
+			else s.setInt(2, u.getLastPlayedBet().getId());
 			
 			if(u.getToPlayBet() == null) s.setNull(3, java.sql.Types.INTEGER);
 			else s.setInt(3, u.getToPlayBet().getGiornata());
