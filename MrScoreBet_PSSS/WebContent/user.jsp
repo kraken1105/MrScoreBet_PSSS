@@ -72,12 +72,14 @@
 
 			<p>Username: <br></br><b><%=""+utente.getUsername() %></b></p>
 			<p>E-mail: <br></br><b><%=""+utente.getEmail() %></b></p>
-
-			<h2 align="center">Schedine</h2>
-			<p>Punti totali: <b><%=""+utente.getCrediti() %> pts</b></p>
+			
+			<div <% if(!utente.getRuolo().equals("utente")) out.print("style=\"display: none\"");%>>
+				<h2 align="center">Schedine</h2>
+				<p>Punti totali: <b><%=""+utente.getCrediti() %> pts</b></p>
 <!-- TO-DO: sistemare query string per indirizzamneto alla servlet -->
-			<p>Ultima schedina giocata: <a href="<%=request.getContextPath()%>/app/bets?to=myLastBet"><%=lastPlayedGiornata%> giornata </a></p>
-			<p>Nuova schedina da giocare: <a href="<%=request.getContextPath()%>/app/bets?to=placeMyBet"><%=toPlayGiornata%> giornata </a><b id="mytimer"></b></p>
+				<p>Ultima schedina giocata: <a href="<%=request.getContextPath()%>/app/bets?to=myLastBet"><%=lastPlayedGiornata%> giornata </a></p>
+				<p>Nuova schedina da giocare: <a href="<%=request.getContextPath()%>/app/bets?to=placeMyBet"><%=toPlayGiornata%> giornata </a><b id="mytimer"></b></p>
+			</div>
 		
 		</div>
 

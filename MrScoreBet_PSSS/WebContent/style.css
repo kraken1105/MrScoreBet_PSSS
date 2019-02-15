@@ -109,7 +109,7 @@ User
 .panel__copy2{max-width: 800px; margin: 0px auto; margin-top: -25%; background: #fff; padding:20px 40px;position: relative; z-index: 1}
 .panel__copy2 a{text-decoration: none}
 
-.panel__copy3{max-width: 800px; margin: 0px auto; margin-top: -60px; background: #fff; padding:20px 40px;position: relative; z-index: 1}
+.panel__copy3{max-width: 800px; margin: 0px auto; margin-top: -20px; background: #fff; padding:20px 40px;position: relative; z-index: 1}
 .panel__copy3 a{text-decoration: none}
 
 .panel__copy__meta{font-weight: bold; font-size: 16px;}
