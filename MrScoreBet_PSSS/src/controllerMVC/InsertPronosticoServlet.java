@@ -1,7 +1,6 @@
 package controllerMVC;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,9 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import modelMVC.*;
-import utils.exceptions.EsitoAlreadyInsertedException;
+import utils.exceptions.SchedinaNotAvailableException;
 
-@WebServlet("/InsertPronosticoServlet")
+@WebServlet("/utente/InsertPronosticoServlet")
 public class InsertPronosticoServlet extends HttpServlet {
 	private static final long serialVersionUID = 6715754017525255251L;
 
@@ -24,8 +23,6 @@ public class InsertPronosticoServlet extends HttpServlet {
 		
 		// Convalida i dati della form anche server-side
 		boolean datiOk = true;		
-				
-		// Prelievo degli esiti dei match
 		ArrayList<String> gameList = new ArrayList<String>();
 		for(int i=1; i<11; i++) {
 			String temp = new String(request.getParameter("match"+i));
@@ -33,30 +30,30 @@ public class InsertPronosticoServlet extends HttpServlet {
 			gameList.add((String) request.getParameter("match"+i));			
 		}
 				
-				if(!datiOk) {
-					session.setAttribute("info", "Si è verificato un errore! Tutti i campi sono obbligatori");
-					response.sendRedirect(request.getContextPath()+"/admin/insertEsito.jsp");
+		if(!datiOk) {
+			session.setAttribute("info", "Si è verificato un errore! Tutti i pronostici sono obbligatori");
+			response.sendRedirect(request.getContextPath()+"/utente/placeMyBet.jsp");
+		} else {
+			
+			// Controlli superati con successo, viene contattato il coordinatore del Model
+			ICoordinatorFacade coord = new CoordinatorFacade();
+			try {
+				boolean esito = coord.inserisciPronostico(utente, gameList);
+				
+				if (esito) {
+					session.setAttribute("info", "Pronostici inseriti correttamente!");
+					response.sendRedirect(request.getContextPath()+"/user.jsp");
 				} else {
-					
-					// Controlli superati con successo, viene contattato il coordinatore del Model
-					ICoordinatorFacade coord = new CoordinatorFacade();
-					try {
-						boolean esito = coord.inserisciEsito(giornata, gameList);
-						
-						if (esito) {
-							session.setAttribute("info", "Esiti inseriti correttamente!");
-							response.sendRedirect(request.getContextPath()+"/user.jsp");
-						} else {
-							session.setAttribute("info", "Si è verificato un errore. Riprova più tardi.");
-							response.sendRedirect(request.getContextPath()+"/user.jsp");
-						}
-						
-					} catch(EsitoAlreadyInsertedException e) {
-						session.setAttribute("info", e.getMessage());
-						response.sendRedirect(request.getContextPath()+"/user.jsp");
-					}			
-					
+					session.setAttribute("info", "Si è verificato un errore. Riprova più tardi.");
+					response.sendRedirect(request.getContextPath()+"/user.jsp");
 				}
+				
+			} catch(SchedinaNotAvailableException e) {
+				session.setAttribute("info", e.getMessage());
+				response.sendRedirect(request.getContextPath()+"/user.jsp");
+			}			
+			
+		}
 	}
 
 }
