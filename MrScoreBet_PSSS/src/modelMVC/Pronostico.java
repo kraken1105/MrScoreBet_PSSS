@@ -9,12 +9,12 @@ import utils.exceptions.UserNotFoundException;
 
 public class Pronostico implements IPronostico {
 	
-	private int id;
+	private Integer id;
 	private ArrayList<String> resultsList;
 	private Schedina schedina;
 	private Integer punti;
 	
-	public Pronostico(int id, ArrayList<String> resultsList, Schedina schedina, Integer punti) {
+	public Pronostico(Integer id, ArrayList<String> resultsList, Schedina schedina, Integer punti) {
 		super();
 		this.id = id;
 		this.resultsList = resultsList;
@@ -39,11 +39,11 @@ public class Pronostico implements IPronostico {
 		UtenteDAO.update(u);
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

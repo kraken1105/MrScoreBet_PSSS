@@ -14,12 +14,12 @@ public class EsitoDAO {
 			int generated_ID = -1;
 			
 			try {
-				s = conn.prepareStatement("INSERT INTO PRONOSTICI ("+
+				s = conn.prepareStatement("INSERT INTO ESITI ("+
 						"match1,match2,match3,match4,match5,match6,match7," + 
-						"match8,match9,match10) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+						"match8,match9,match10) VALUES (?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 				
 				for(int i=1; i<11; i++)
-					s.setString(i, esito.getResultsList().get(i));
+					s.setString(i, esito.getResultsList().get(i-1));
 				
 				s.executeUpdate();
 				
@@ -50,7 +50,7 @@ public class EsitoDAO {
 				ResultSet rs = s.executeQuery();
 					
 				while (rs.next()) {
-					for(int i=1; i<11; i++) array.set(i-1,rs.getString("match"+i));
+					for(int i=1; i<11; i++) array.add(rs.getString("match"+i));
 				}
 				
 				esito = new Esito(id,array);
@@ -88,7 +88,7 @@ public class EsitoDAO {
 				PreparedStatement s = null;
 				
 				try {
-					s = conn.prepareStatement("DELETE FROM PRONOSTICI WHERE id=?");
+					s = conn.prepareStatement("DELETE FROM ESITI WHERE id=?");
 					s.setInt(1, esito.getId());
 					
 					s.executeUpdate();
