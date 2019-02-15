@@ -1,6 +1,11 @@
 package modelMVC;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import persistencyDAO.UtenteDAO;
+import persistencyDAO.Utility;
+import utils.exceptions.UserNotFoundException;
 
 public class Pronostico implements IPronostico {
 	
@@ -18,7 +23,7 @@ public class Pronostico implements IPronostico {
 	}
 	
 	@Override
-	public void calcolaPunti() {
+	public void calcolaPunti() throws UserNotFoundException, SQLException {
 		int pron_corretti = 0;
 		
 		for(int i=0; i<10; i++)
@@ -29,7 +34,10 @@ public class Pronostico implements IPronostico {
 		setPunti(pron_corretti*10 + ((pron_corretti==10)?100:0) );
 		
 		
-		// aggiorna l'utenteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+		// aggiorna l'utente
+		Utente u = Utility.getUtenteDaPronostico(this);
+		u.setCrediti(u.getCrediti()+punti);
+		UtenteDAO.update(u);
 	}
 
 	public int getId() {

@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class Esito {
 
-	private int id;
+	private Integer id;
 	private ArrayList<String> resultsList;
 	
-	public Esito(int id, ArrayList<String> resultsList) {
+	public Esito(Integer id, ArrayList<String> resultsList) {
 		super();
 		this.id = id;
 		this.resultsList = resultsList;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 

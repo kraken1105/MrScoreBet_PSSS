@@ -1,8 +1,12 @@
 package modelMVC;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import persistencyDAO.*;
+import utils.exceptions.EsitoAlreadyInsertedException;
+import utils.exceptions.EsitoNotInsertedException;
 import utils.exceptions.UserNotFoundException;
 import utils.exceptions.UsernameAlreadyRegisteredException;
 
@@ -31,6 +35,53 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 		}
 		catch(SQLException e) {e.printStackTrace(); return null;}
 		finally {DBManager.getInstance().UnlockDB();}				// unlock DB
+	}
+
+	@Override
+	public boolean inserisciSchedina(ArrayList<String> matchlist, int giornata, LocalDateTime dataScadenza) throws EsitoNotInsertedException {
+		DBManager.getInstance().LockDB();
+		Schedina s;
+		try {
+		if(Utility.getSchedinaSenzaEsito()!=null) 
+			throw new EsitoNotInsertedException("L'esito della precedente schedina non è stato ancora inserito");
+		else {
+				s = new Schedina(giornata, dataScadenza, matchlist, null);
+				SchedinaDAO.create(s);
+				ArrayList<Utente> utenti = Utility.getAllUsers();
+				for(Utente u:utenti) {
+					u.setToPlayBet(s);
+					UtenteDAO.update(u);
+				}
+			} 
+		}
+		catch (UserNotFoundException|SQLException e) {
+			e.printStackTrace();
+		}
+		finally {DBManager.getInstance().UnlockDB();}
+		return true;
+	}
+
+	@Override
+	public boolean inserisciEsito(int giornata, ArrayList<String> resultsList) throws EsitoAlreadyInsertedException {
+		DBManager.getInstance().LockDB();
+		try {
+			Schedina s = Utility.getSchedinaSenzaEsito();
+			if(s==null) 
+				throw new EsitoAlreadyInsertedException("L'esito della precedente schedina non è stato ancora inserito");
+			else {
+				Esito e = new Esito(null,resultsList);
+				int id = EsitoDAO.create(e);
+				e.setId(id);
+				s.setEsito(e);
+				SchedinaDAO.update(s);
+				s.updatePronostici();
+				}
+		}
+		catch (SQLException e) {
+				e.printStackTrace();
+		}
+		finally {DBManager.getInstance().UnlockDB();}
+		return true;
 	}
 	
 

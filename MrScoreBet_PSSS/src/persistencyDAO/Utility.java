@@ -4,15 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import modelMVC.*;
 import utils.exceptions.UserNotFoundException;
 
-public class Utility implements IUtility {
+public class Utility {
 
-	@Override
-	public Utente getUtenteDaPronostico(Pronostico p) throws UserNotFoundException, SQLException {
+	
+	public static Utente getUtenteDaPronostico(Pronostico p) throws UserNotFoundException, SQLException {
 		Utente utente = null;
 		String username=null;
 		Connection conn = DBManager.getInstance().getConnection();
@@ -46,8 +48,8 @@ public class Utility implements IUtility {
 		return utente;
 	}
 
-	@Override
-	public ArrayList<Utente> getAllUsers() throws UserNotFoundException, SQLException {
+	
+	public static ArrayList<Utente> getAllUsers() throws UserNotFoundException, SQLException {
 		ArrayList<Utente> utenti = new ArrayList<Utente>();
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
@@ -77,8 +79,8 @@ public class Utility implements IUtility {
 		return utenti;
 	}
 
-	@Override
-	public ArrayList<Pronostico> getPronosticiDaSchedina(Schedina schedina) throws SQLException {
+	
+	public static ArrayList<Pronostico> getPronosticiDaSchedina(Schedina schedina) throws SQLException {
 		ArrayList<Pronostico> pronostici= new ArrayList<Pronostico>();
 		ArrayList<String> array = new ArrayList<String>();
 		Connection conn = DBManager.getInstance().getConnection();
@@ -108,10 +110,35 @@ public class Utility implements IUtility {
 		return pronostici;	
 	}
 
-	@Override
-	public Schedina getSchedinaSenzaEsito() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public static Schedina getSchedinaSenzaEsito() throws SQLException {
+		Schedina schedina = null;
+		Connection conn = DBManager.getInstance().getConnection();
+		PreparedStatement s = null;
+		
+		try { 
+			s = conn.prepareStatement("SELECT * FROM SCHEDINE WHERE esito IS NULL");
+			ResultSet rs = s.executeQuery();
+				
+			while (rs.next()) {
+				int numGiornata = rs.getInt("giornata");
+				LocalDateTime dataScadenza = LocalDateTime.parse(rs.getString("dataScadenza"), DateTimeFormatter.ISO_DATE_TIME);
+				ArrayList<String> gameList = new ArrayList<String>();				
+							
+				for(int i=1; i<11; i++)
+					gameList.add(new String(rs.getString("match"+i)));
+				Esito esito = EsitoDAO.read(rs.getInt("esito"));			
+				schedina= new Schedina(numGiornata, dataScadenza, gameList,esito);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} catch (NullPointerException ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			if (s != null) s.close();
+		}
+		
+		return schedina;
 	}
 
 }
