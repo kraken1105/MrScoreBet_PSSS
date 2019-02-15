@@ -39,11 +39,12 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 
 	@Override
 	public boolean inserisciSchedina(ArrayList<String> matchlist, int giornata, LocalDateTime dataScadenza) throws EsitoNotInsertedException {
-		DBManager.getInstance().LockDB();
+		DBManager.getInstance().LockDB();							// lock DB
 		Schedina s;
 		try {
-		if(Utility.getSchedinaSenzaEsito()!=null) 
-			throw new EsitoNotInsertedException("L'esito della precedente schedina non è stato ancora inserito");
+			s = Utility.getSchedinaSenzaEsito();
+			if(s!=null) 
+			throw new EsitoNotInsertedException("L'esito della giornata "+s.getGiornata()+" non è stato ancora inserito");
 		else {
 				s = new Schedina(giornata, dataScadenza, matchlist, null);
 				SchedinaDAO.create(s);
@@ -54,20 +55,18 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 				}
 			} 
 		}
-		catch (UserNotFoundException|SQLException e) {
-			e.printStackTrace();
-		}
-		finally {DBManager.getInstance().UnlockDB();}
+		catch (UserNotFoundException|SQLException e) {e.printStackTrace(); return false;}
+		finally {DBManager.getInstance().UnlockDB();}				// unlock DB
 		return true;
 	}
 
 	@Override
 	public boolean inserisciEsito(int giornata, ArrayList<String> resultsList) throws EsitoAlreadyInsertedException {
-		DBManager.getInstance().LockDB();
+		DBManager.getInstance().LockDB();					// unlock DB
 		try {
 			Schedina s = Utility.getSchedinaSenzaEsito();
 			if(s==null) 
-				throw new EsitoAlreadyInsertedException("L'esito della precedente schedina non è stato ancora inserito");
+				throw new EsitoAlreadyInsertedException("L'esito della giornata "+giornata+" è stato già inserito");
 			else {
 				Esito e = new Esito(null,resultsList);
 				int id = EsitoDAO.create(e);
@@ -77,10 +76,8 @@ public class CoordinatorFacade implements ICoordinatorFacade {
 				s.updatePronostici();
 				}
 		}
-		catch (SQLException e) {
-				e.printStackTrace();
-		}
-		finally {DBManager.getInstance().UnlockDB();}
+		catch (SQLException e) {e.printStackTrace(); return false;}
+		finally {DBManager.getInstance().UnlockDB();}				// unlock DB
 		return true;
 	}
 	
