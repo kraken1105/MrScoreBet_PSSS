@@ -9,7 +9,7 @@ public class DBManager {
 	private static DBManager instance = null;
 	private final Lock lock = new ReentrantLock();
 	
-	public static DBManager getInstance() {
+	public static synchronized DBManager getInstance() {
 			if (instance == null) {
 				instance = new DBManager();
 			}
