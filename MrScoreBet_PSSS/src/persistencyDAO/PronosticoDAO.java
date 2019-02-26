@@ -71,19 +71,23 @@ public class PronosticoDAO {
 	}
 	
 	// 3) Update
-	public static void update(Pronostico b) throws SQLException {
-		/*da implementare in base alle esigenze
+	public static void update(Pronostico p) throws SQLException {
 		Connection conn = DBManager.getInstance().getConnection();
 		PreparedStatement s = null;
 			
 		try {
+			String comando = new String("UPDATE PRONOSTICI SET punti=? WHERE id=?");
+			s = conn.prepareStatement(comando);
+			s.setInt(1, p.getPunti());
+			s.setInt(2, p.getId());
 			
+			s.executeUpdate();
+						
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
 			if (s != null) s.close();
 		}
-		*/
 	}
 	
 	

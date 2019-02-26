@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import persistencyDAO.PronosticoDAO;
 import persistencyDAO.Utility;
 import utils.exceptions.UserNotFoundException;
 
@@ -58,8 +59,9 @@ public class Schedina extends AbstractSchedina {
 		void updatePronostici() {
 			try {
 				ArrayList<Pronostico> pronostici = Utility.getPronosticiDaSchedina(this);
-				for(Pronostico p:pronostici)
+				for(Pronostico p:pronostici) {
 					p.calcolaPunti();
+				}
 			}
 			catch (UserNotFoundException|SQLException e) {
 				e.printStackTrace();

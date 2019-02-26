@@ -3,6 +3,7 @@ package modelMVC;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import persistencyDAO.PronosticoDAO;
 import persistencyDAO.UtenteDAO;
 import persistencyDAO.Utility;
 import utils.exceptions.UserNotFoundException;
@@ -37,6 +38,7 @@ public class Pronostico implements IPronostico {
 		Utente u = Utility.getUtenteDaPronostico(this);
 		u.setCrediti(u.getCrediti()+punti);
 		UtenteDAO.update(u);
+		PronosticoDAO.update(this);
 	}
 
 	public Integer getId() {
